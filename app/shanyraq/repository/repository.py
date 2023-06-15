@@ -3,7 +3,7 @@ from typing import List
 
 from bson.objectid import ObjectId
 from pymongo.database import Database
-from pymongo.results import DeleteResult, UpdateResult
+from pymongo.results import DeleteResult
 
 
 class ShanyraqRepository:
@@ -53,3 +53,17 @@ class ShanyraqRepository:
             },
             update={"$set": data},
         )
+
+    def insert_media(self, user_id: str, shanyraq_id, urls: List):
+        shanyraq = self.database["shanyraqs"].find_one(
+            {
+                "_id": ObjectId(shanyraq_id),
+                "user_id": ObjectId(user_id),
+            }
+        )
+        if "media" in shanyraq:
+            shanyraq["media"].extend(urls)
+        else:
+            shanyraq["media"] = urls
+
+        self.update_shanyraq(user_id, shanyraq_id, shanyraq)

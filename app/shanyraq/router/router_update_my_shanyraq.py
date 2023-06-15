@@ -1,7 +1,5 @@
-from typing import Any
-
 from fastapi import Depends, Response
-from pydantic import Field
+
 
 from app.utils import AppModel
 
@@ -27,6 +25,6 @@ def update_my_shanyraq(
     jwt_data: JWTData = Depends(parse_jwt_user_data),
     svc: Service = Depends(get_service),
 ) -> dict[str, str]:
-    svc.repository.update_shanyraq(jwt_data.user_id, shanyrak_id, input.dict())
+    url = svc.repository.insert_media(jwt_data.user_id, shanyrak_id, input.dict())
 
-    return Response(status_code=200)
+    return {"url": url}
