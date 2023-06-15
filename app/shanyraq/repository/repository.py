@@ -1,14 +1,33 @@
 from datetime import datetime
 from typing import List
-
+from fastapi import HTTPException
 from bson.objectid import ObjectId
 from pymongo.database import Database
 from pymongo.results import DeleteResult
 
-
 class ShanyraqRepository:
     def __init__(self, database: Database):
         self.database = database
+    
+    def delete_file(self, user_id, shanyraq_id, url):
+        shanyraq = self.database["shanyraqs"].find_one(
+            {
+                "_id": ObjectId(shanyraq_id),
+                "user_id": ObjectId(user_id),
+            }
+        )
+        if url in shanyraq["media"]:
+            shanyraq["media"].remove(url)
+        else:
+            raise HTTPException(status_code=404)
+        
+        self.database["shanyraqs"].update_one(
+            filter={
+                "_id": ObjectId(shanyraq_id),
+                "user_id": ObjectId(user_id),
+            },
+            update={"$set": shanyraq},
+        )
 
     def create_shanyraq(self, user_id: str, data: dict):
         payload = {
@@ -32,7 +51,7 @@ class ShanyraqRepository:
                 "user_id": ObjectId(user_id),
             }
         )
-
+        
     def get_my_shanyraq_by_id(self, user_id: str) -> List[dict]:
         shanyraqs = self.database["shanyraqs"].find(
             {
@@ -42,6 +61,7 @@ class ShanyraqRepository:
         result = []
         for shanyraq in shanyraqs:
             result.append(shanyraq)
+            
 
         return result
 

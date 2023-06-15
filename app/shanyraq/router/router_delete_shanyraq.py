@@ -5,7 +5,7 @@ from . import router
 from .dependencies import parse_jwt_user_data
 
 
-@router.delete("/{shanyrak_id:str}/delete")
+@router.delete("/{shanyrak_id:str}/deleteShanyraq")
 def delete_my_shanyraq(
     shanyrak_id=str,
     jwt_data: JWTData = Depends(parse_jwt_user_data),
