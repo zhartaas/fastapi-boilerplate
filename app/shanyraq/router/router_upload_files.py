@@ -6,7 +6,6 @@ from . import router
 from .dependencies import parse_jwt_user_data
 
 
-
 @router.post("/{shanyraq_id:str}/upload")
 def upload_files(
     files: List[UploadFile],
@@ -14,7 +13,6 @@ def upload_files(
     jwt_data: JWTData = Depends(parse_jwt_user_data),
     svc: Service = Depends(get_service),
 ) -> dict[str, List]:
-    
     media = []
 
     for file in files:
@@ -23,4 +21,4 @@ def upload_files(
 
     svc.repository.insert_media(jwt_data.user_id, shanyraq_id, media)
 
-    return {"media" : media}
+    return {"media": media}

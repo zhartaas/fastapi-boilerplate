@@ -35,6 +35,3 @@ def get_service():
 
     svc = Service(repository, jwt_svc)
     return svc
-
-
-

@@ -15,11 +15,19 @@ def delete_files(
 ):
     for url in media:
         svc.repository.delete_file(
-            user_id=jwt_data.user_id,
-            shanyraq_id=shanyraq_id,
-            url=url
+            user_id=jwt_data.user_id, shanyraq_id=shanyraq_id, url=url
+        )
+
+@router.delete("/{shanyraq_id:str}/deleteFiles")
+def delete_files(
+    shanyraq_id: str,
+    media: List[str],
+    jwt_data: JWTData = Depends(parse_jwt_user_data),
+    svc: Service = Depends(get_service),
+):
+    for url in media:
+        svc.repository.delete_file(
+            user_id=jwt_data.user_id, shanyraq_id=shanyraq_id, url=url
         )
         svc.s3_service.delete_file(url)
-    
-        
-            
+        svc.s3_service.delete_file(url)

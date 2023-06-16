@@ -1,4 +1,3 @@
-
 from fastapi import Depends
 
 from app.utils import AppModel
